@@ -37,7 +37,13 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
+		File[] files = new File(args[0]).listFiles();
 
+		for(int i = 0; i < files.length; i++) {
+			if(files[i].getName().matches("[0-9],{8}")) {
+
+			}
+		}
 
 
 		// 支店別集計ファイル書き込み処理
@@ -68,7 +74,10 @@ public class CalculateSales {
 			// 一行ずつ読み込む
 			while((line = br.readLine()) != null) {
 				// ※ここの読み込み処理を変更してください。(処理内容1-2)
-				System.out.println(line);
+				String[] items = line.split(",");
+
+				branchNames.put(items[0], items[1]);
+				branchSales.put(items[0], (long) 0);
 			}
 
 		} catch(IOException e) {
