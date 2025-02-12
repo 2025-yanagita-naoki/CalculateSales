@@ -46,9 +46,48 @@ public class CalculateSales {
 		for(int i = 0; i < files.length; i++) {
 			String comparisonFile = files[i].getName();
 			if(comparisonFile.matches("^[0-9]{8}+.rcd$")) {
-
 				rcdFiles.add(files[i]);
+				}
 			}
+
+		for(int j = 0; j < rcdFiles.size(); j++) {
+				File file = new File(args[0], rcdFiles.get(j).getName());
+
+				//集計ファイルの読み込み
+				BufferedReader br = null;
+
+				try {
+					FileReader fr = new FileReader(file);
+					br = new BufferedReader(fr);
+
+					//集計ファイルの金額加算
+					String line;
+					List<String> items = new ArrayList<>();
+					while((line = br.readLine()) != null) {
+						items.add(line);
+
+						long fileSale = Long.parseLong(items.get(1));
+						long saleAmount = branchSales.get(items.get(0)) + fileSale;
+
+						branchSales.put(items.get(0), saleAmount);
+					}
+
+					System.out.println(branchSales);
+				} catch(IOException e) {
+					System.out.println(UNKNOWN_ERROR);
+					return;
+				} finally {
+					// ファイルを開いている場合
+					if(br != null) {
+						try {
+							// ファイルを閉じる
+							br.close();
+						} catch(IOException e) {
+							System.out.println(UNKNOWN_ERROR);
+							return;
+						}
+					}
+				}
 		}
 
 
