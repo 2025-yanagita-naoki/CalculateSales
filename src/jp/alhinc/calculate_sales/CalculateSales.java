@@ -81,11 +81,27 @@ public class CalculateSales {
 
 				}
 
+				if(items.size() != 2) {
+					System.out.println("<該当ファイル名>のフォーマットが不正です");
+				}
+
 				//合計金額の計算・マップへの追加
 				long fileSale = Long.parseLong(items.get(1));
 				Long saleAmount = branchSales.get(items.get(0)) + fileSale;
 
+				//桁数超過のエラー処理
+				if(saleAmount >= 10000000000L) {
+					System.out.println("合計⾦額が10桁を超えました");
+				}
+
+
+				if(branchSales.containsKey(items.get(0))) {
+					System.out.println("<該当ファイル名>の支店コードが不正です");
+				}
+
 				branchSales.put(items.get(0), saleAmount);
+
+
 
 			} catch (IOException e) {
 				System.out.println(UNKNOWN_ERROR);
