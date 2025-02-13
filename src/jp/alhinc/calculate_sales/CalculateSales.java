@@ -47,14 +47,14 @@ public class CalculateSales {
 
 		//該当ファイルの判定
 		for (int i = 0; i < files.length; i++) {
-			String comparisonFile = files[i].getName();
-			if (comparisonFile.matches("^[0-9]{8}+.rcd$")) {
+			String fileName = files[i].getName();
+			if (fileName.matches("^[0-9]{8}.rcd$")) {
 				rcdFiles.add(files[i]);
 			}
 		}
 
-		for (int j = 0; j < rcdFiles.size(); j++) {
-			File file = new File(args[0], rcdFiles.get(j).getName());
+		for (int i = 0; i < rcdFiles.size(); i++) {
+			File file = new File(args[0], rcdFiles.get(i).getName());
 
 			//集計ファイルの読み込み
 			BufferedReader br = null;
@@ -126,7 +126,7 @@ public class CalculateSales {
 				String[] items = line.split(",");
 
 				branchNames.put(items[0], items[1]);
-				branchSales.put(items[0], (long) 0);
+				branchSales.put(items[0], 0L);
 			}
 
 		} catch (IOException e) {
@@ -169,7 +169,7 @@ public class CalculateSales {
 
 			//支店別集計ファイルへの書き込み処理
 			for (String key : branchNames.keySet()) {
-				bw.write(key + "," + branchNames.get(key) + "," +  branchSales.get(key));
+				bw.write(key + "," + branchNames.get(key) + "," + branchSales.get(key));
 				bw.newLine();
 			}
 
