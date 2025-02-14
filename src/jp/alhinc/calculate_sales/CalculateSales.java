@@ -33,17 +33,18 @@ public class CalculateSales {
 	 * @param コマンドライン引数
 	 */
 	public static void main(String[] args) {
+
+		//コマンドライン引数代入エラー
+				if(args.length != 1) {
+					System.out.println(UNKNOWN_ERROR);
+					return;
+				}
+
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
 		// 支店コードと売上金額を保持するMap
 		Map<String, Long> branchSales = new HashMap<>();
 
-
-		//コマンドライン引数代入エラー
-		if(args.length != 1) {
-			System.out.println(UNKNOWN_ERROR);
-			return;
-		}
 
 		// 支店定義ファイル読み込み処理
 		if (!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales)) {
@@ -124,7 +125,6 @@ public class CalculateSales {
 				}
 
 				branchSales.put(items.get(0), saleAmount);
-
 
 			} catch (IOException e) {
 				System.out.println(UNKNOWN_ERROR);
