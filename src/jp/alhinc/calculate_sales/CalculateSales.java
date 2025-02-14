@@ -40,6 +40,12 @@ public class CalculateSales {
 			return;
 		}
 
+		//コマンドライン引数代入エラー
+		if(args.length != 1) {
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}
+
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
 		File[] files = new File(args[0]).listFiles();
 
@@ -48,7 +54,7 @@ public class CalculateSales {
 		//該当ファイルの判定
 		for (int i = 0; i < files.length; i++) {
 			String fileName = files[i].getName();
-			if (fileName.matches("^[0-9]{8}.rcd$")) {
+			if (files[i].isFile() && fileName.matches("^[0-9]{8}.rcd$")) {
 				rcdFiles.add(files[i]);
 			}
 		}
@@ -78,25 +84,35 @@ public class CalculateSales {
 				List<String> items = new ArrayList<>();
 				while ((line = br.readLine()) != null) {
 					items.add(line);
-
 				}
 
+				//売上ファイルのフォーマットエラー処理
 				if(items.size() != 2) {
-					System.out.println("<該当ファイル名>のフォーマットが不正です");
+					System.out.println("<" + rcdFiles.get(i).getName() +">" + "のフォーマットが不正です");
+					return;
+				}
+
+				//売上金額が数字になっていない場合のエラー処理
+				if(!items.get(1).matches("^[0-9]+$")) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 
 				//合計金額の計算・マップへの追加
 				long fileSale = Long.parseLong(items.get(1));
 				Long saleAmount = branchSales.get(items.get(0)) + fileSale;
 
+
 				//桁数超過のエラー処理
 				if(saleAmount >= 10000000000L) {
 					System.out.println("合計⾦額が10桁を超えました");
+					return;
 				}
 
-
-				if(branchSales.containsKey(items.get(0))) {
-					System.out.println("<該当ファイル名>の支店コードが不正です");
+				//保持KeyとマップのKeyの不一致エラー
+				if(!branchSales.containsKey(items.get(0))) {
+					System.out.println("<" + rcdFiles.get(i).getName() +">" + "の支店コードが不正です");
+					return;
 				}
 
 				branchSales.put(items.get(0), saleAmount);
