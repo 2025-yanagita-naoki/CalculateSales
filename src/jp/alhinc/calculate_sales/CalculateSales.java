@@ -101,15 +101,15 @@ public class CalculateSales {
 					return;
 				}
 
-				//売上金額が数字になっていない場合のエラー処理
-				if(!items.get(1).matches("^[0-9]+$")) {
-					System.out.println(UNKNOWN_ERROR);
-					return;
-				}
-
 				//保持KeyとマップのKeyの不一致エラー
 				if(!branchSales.containsKey(items.get(0))) {
 					System.out.println("<" + fileName +">" + "の支店コードが不正です");
+					return;
+				}
+
+				//売上金額が数字になっていない場合のエラー処理
+				if(!items.get(1).matches("^[0-9]+$")) {
+					System.out.println(UNKNOWN_ERROR);
 					return;
 				}
 
