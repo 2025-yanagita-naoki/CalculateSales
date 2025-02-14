@@ -29,10 +29,12 @@ public class CalculateSales {
 	// エラーメッセージ
 	private static final String UNKNOWN_ERROR = "予期せぬエラーが発生しました";
 	private static final String FILE_NOT_EXIST = "支店定義ファイルが存在しません";
-	private static final String BRANCH_FILE_INVALID_FORMAT = "支店定義ファイルのフォーマットが不正です";
-	private static final String COMMODITY_FILE_INVALID_FORMAT = "商品定義ファイルのフォーマットが不正です";
+	private static final String FILE_INVALID_FORMAT = "定義ファイルのフォーマットが不正です";
 	private static final String FILE_NOT_SERIAL ="売上ファイル名が連番になっていません";
 	private static final String PRICE_NUMBER_ERROR ="合計⾦額が10桁を超えました";
+	private static final String FILE_FORMAT_ERROR ="のフォーマットが不正です";
+	private static final String BRANCH_FILE_FORMAT_ERROR ="の支店コードが不正です";
+	private static final String COMMODITY_FILE_FORMAT_ERROR ="の商品コードが不正です";
 
 	//ファイルフォーマットチェック
 	private static final String BRANCH_FILE_FORMAT ="^[0-9]{3}$";
@@ -46,10 +48,10 @@ public class CalculateSales {
 	public static void main(String[] args) {
 
 		//コマンドライン引数代入エラー
-				if(args.length != 1) {
-					System.out.println(UNKNOWN_ERROR);
-					return;
-				}
+		if(args.length != 1) {
+			System.out.println(UNKNOWN_ERROR);
+			return;
+		}
 
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
@@ -63,12 +65,12 @@ public class CalculateSales {
 
 
 		// 支店定義ファイル読み込み処理
-		if (!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales, BRANCH_FILE_FORMAT, BRANCH_FILE_INVALID_FORMAT)) {
+		if (!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales, BRANCH_FILE_FORMAT, "支店")) {
 			return;
 		}
 
 		//商品定義ファイル読み込み処理
-		if (!readFile(args[0], FILE_NAME_COMMODITY_LST, commodityNames, commoditySales, COMMODITY_FILE_FORMAT,COMMODITY_FILE_INVALID_FORMAT)) {
+		if (!readFile(args[0], FILE_NAME_COMMODITY_LST, commodityNames, commoditySales, COMMODITY_FILE_FORMAT,"商品")) {
 			return;
 		}
 
@@ -118,19 +120,19 @@ public class CalculateSales {
 				String fileName = rcdFiles.get(i).getName();
 				//売上ファイルのフォーマットエラー処理
 				if(items.size() != 3) {
-					System.out.println("<" + fileName +">" + "のフォーマットが不正です");
+					System.out.println(fileName + FILE_FORMAT_ERROR);
 					return;
 				}
 
 				String branchKey = items.get(0);
-				String CommodityKey = items.get(1);
+				String commodityKey = items.get(1);
 
 				//保持KeyとマップのKeyの不一致エラー
 				if(!branchSales.containsKey(branchKey)) {
-					System.out.println("<" + fileName +">" + "の支店コードが不正です"); //支店コードの不一致
+					System.out.println(fileName + BRANCH_FILE_FORMAT_ERROR); //支店コードの不一致
 					return;
-				} else if(!commoditySales.containsKey(CommodityKey)) {
-					System.out.println("<" + fileName +">" + "の商品コードが不正です"); //商品コードの不一致
+				} else if(!commoditySales.containsKey(commodityKey)) {
+					System.out.println(fileName + COMMODITY_FILE_FORMAT_ERROR); //商品コードの不一致
 					return;
 				}
 
@@ -145,20 +147,17 @@ public class CalculateSales {
 				//合計金額の計算・マップへの追加
 				long fileSale = Long.parseLong(items.get(2));
 				Long branchSaleAmount = branchSales.get(branchKey) + fileSale;
-				Long CommoditySaleAmount = commoditySales.get(CommodityKey) + fileSale;
+				Long commoditySaleAmount = commoditySales.get(commodityKey) + fileSale;
 
 
 				//桁数超過のエラー処理
-				if(branchSaleAmount >= 10000000000L) {
-					System.out.println(PRICE_NUMBER_ERROR); //支店別合計金額の桁数超過
-					return;
-				} else if(CommoditySaleAmount >= 10000000000L){
-					System.out.println(PRICE_NUMBER_ERROR); //商品別合計金額の桁数超過
+				if((branchSaleAmount >= 10000000000L) || (commoditySaleAmount >= 10000000000L)) {
+					System.out.println(PRICE_NUMBER_ERROR);
 					return;
 				}
 
 				branchSales.put(branchKey, branchSaleAmount);
-				commoditySales.put(CommodityKey, CommoditySaleAmount);
+				commoditySales.put(commodityKey, commoditySaleAmount);
 
 			} catch (IOException e) {
 				System.out.println(UNKNOWN_ERROR);
@@ -222,7 +221,7 @@ public class CalculateSales {
 
 				//ファイルフォーマットのエラー処理
 				if((items.length != 2) || (!items[0].matches(fileFormat))) {
-					System.out.println(invalidFormat);
+					System.out.println(invalidFormat + FILE_INVALID_FORMAT);
 					return false;
 				}
 
