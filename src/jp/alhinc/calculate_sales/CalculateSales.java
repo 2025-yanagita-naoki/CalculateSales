@@ -63,6 +63,7 @@ public class CalculateSales {
 			int formar = Integer.parseInt(rcdFiles.get(i).getName().substring(0, 8));
 			int latter = Integer.parseInt(rcdFiles.get(i + 1).getName().substring(0, 8));
 
+			//売上集計ファイルが連番となっていない場合のエラー
 			if(latter - formar != 1) {
 				System.out.println("売上ファイル名が連番になっていません");
 				return;
