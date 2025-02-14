@@ -34,7 +34,7 @@ public class CalculateSales {
 	private static final String FILE_NOT_SERIAL ="売上ファイル名が連番になっていません";
 	private static final String PRICE_NUMBER_ERROR ="合計⾦額が10桁を超えました";
 
-	//ファイルフォーマット条件
+	//ファイルフォーマットチェック
 	private static final String BRANCH_FILE_FORMAT ="^[0-9]{3}$";
 	private static final String COMMODITY_FILE_FORMAT ="^[a-zA-Z0-9]{8}$";
 
