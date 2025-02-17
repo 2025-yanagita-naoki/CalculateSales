@@ -55,11 +55,13 @@ public class CalculateSales {
 
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
+
 		// 支店コードと売上金額を保持するMap
 		Map<String, Long> branchSales = new HashMap<>();
 
 		// 商品コードと商品名を保持するMap
 		Map<String, String> commodityNames = new HashMap<>();
+
 		// 商品コードと商品金額を保持するMap
 		Map<String, Long> commoditySales = new HashMap<>();
 
